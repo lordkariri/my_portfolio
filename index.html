@@ -6,6 +6,8 @@
   <title>Responsive Horizontal Scroll with Button</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
 
 </head>
 <body>
@@ -25,27 +27,33 @@
 
       <!-- Tennis Button -->
       
-      <img src="assets/tennis-assets/tennis_code.svg" alt="Code" class="button" id="btn-code" style="left: 1.8%; top: 31.5%; width: 9.5vw;">
-      <img src="assets/tennis-assets/tennis_home.svg" alt="Home" class="button" id="btn-home" style="left: 4.3%; top: 31%; width: 8vw;">
-      <img src="assets/tennis-assets/tennis_music.svg" alt="Music" class="button" id="btn-music" style="left: 6.35%; top: 32%; width: 6.75vw;">
-      <img src="assets/tennis-assets/tennis_contact.svg" alt="Contact" class="button" id="btn-contact" style="left: 8.3%; top: 32.5%; width: 6.4vw;">
+      <img src="assets/tennis-assets/tennis_code.svg" alt="Code" class="button" data-target="code" style="left: 1.8%; top: 31.5%; width: 9.5vw;">
+      <img src="assets/tennis-assets/tennis_home.svg" alt="Home" class="button" data-target="home"style="left: 4.3%; top: 31%; width: 8vw;">
+      <img src="assets/tennis-assets/tennis_music.svg" alt="Music" class="button" data-target="music" style="left: 6.35%; top: 32%; width: 6.75vw;">
+      <img src="assets/tennis-assets/tennis_contact.svg" alt="Contact" class="button" data-target="contact" id="btn-contact" style="left: 8.3%; top: 32.5%; width: 6.4vw;">
        
       <!-- City buttons -->
-      <img src="assets/city-assets/coding_projects.svg" alt="Coding projects" class="button" id="btn-coding" style="left: 27.35%; top: 54.45%; width: 12vw;">
-      <img src="assets/city-assets/design_projects.svg" alt="Design projects" class="button" id="btn-design" style="left: 23.17%; top: 51.45%; width: 15vw;">
-      <img src="assets/city-assets/professional_experiance.svg" alt="Professional experiance" class="button" id="btn-experience" style="left: 30.75%; top: 55.9%; width: 9.1vw;">
+      <img src="assets/city-assets/coding_projects.svg" alt="Coding projects" class="button" id="btn-coding" 
+          style="left: 27.35%; top: 54.45%; width: 12vw;"
+          data-overlay="coding-projects">
+      <img src="assets/city-assets/design_projects.svg" alt="Design projects" class="button" id="btn-design" 
+           style="left: 23.17%; top: 51.45%; width: 15vw;"
+           data-overlay="design-projects">>
+      <img src="assets/city-assets/professional_experiance.svg" alt="Professional experiance" class="button" id="btn-experience" 
+           style="left: 30.75%; top: 55.9%; width: 9.1vw;"
+           data-overlay="professional-experiance">>
 
-      <img src="assets/city-assets/music_car.svg" alt="music" class="button" id="music_car" style="left: 31%; top: 80%; width: 15vw;">
-      <img src="assets/city-assets/home_car.svg" alt="home" class="button" id="home_car" style="left: 27.3%; top: 85.5%; width: 21vw;">
+      <img src="assets/city-assets/music_car.svg" alt="music" class="button" data-target="music" id="music_car" style="left: 31%; top: 80%; width: 15vw;">
+      <img src="assets/city-assets/home_car.svg" alt="home" class="button" data-target="home" id="home_car" style="left: 27.3%; top: 85.5%; width: 21vw;">
       
-      <img src="assets/city-assets/contact_car.svg" alt="contact" class="button" id="contact_car" style="left: 34%; top: 77%; width: 10.2vw;">
-      <img src="assets/city-assets/writing_car.svg" alt="writing" class="button" id="writing_car" style="left: 22.35%; top: 92.29%; width: 23vw;">
+      <img src="assets/city-assets/contact_car.svg" alt="contact" data-target="contact"class="button" id="contact_car" style="left: 34%; top: 77%; width: 10.2vw;">
+      <img src="assets/city-assets/writing_car.svg" alt="writing" data-target="writing" class="button" id="writing_car" style="left: 22.35%; top: 92.29%; width: 23vw;">
      
       <!-- Beach buttons -->
-      <img src="assets/music-assets/music_writing.svg" alt="Writing" class="button" id="btn-writing" style="left: 75.4%; top: 21.9%; width: 16.7vw; transform: translate(-50%, -50%) rotate(355deg);">
-      <img src="assets/music-assets/music_code.svg" alt="Code" class="button" id="btn-code" style="left: 75.3%; top: 31.2%; width: 16.3vw;">
-      <img src="assets/music-assets/music_home.svg" alt="Home" class="button" id="btn-home" style="left: 75.3%; top: 40.5%; width: 16.5vw;translate:(-50%, -50%) rotate(350deg)">
-      <img src="assets/music-assets/music_contact.svg" alt="Contact" class="button" id="btn-contact" style="left: 75.7%; top: 50%; width: 14.9vw; translate:(-50%, -50%) rotate(357deg);">
+      <img src="assets/music-assets/music_writing.svg" alt="Writing" data-target="writing"class="button" id="btn-writing" style="left: 75.4%; top: 21.9%; width: 16.7vw; transform: translate(-50%, -50%) rotate(355deg);">
+      <img src="assets/music-assets/music_code.svg" alt="Code" class="button" data-target="code"id="btn-code" style="left: 75.3%; top: 31.2%; width: 16.3vw;">
+      <img src="assets/music-assets/music_home.svg" alt="Home" data-target="home" class="button" id="btn-home" style="left: 75.3%; top: 40.5%; width: 16.5vw;translate:(-50%, -50%) rotate(350deg)">
+      <img src="assets/music-assets/music_contact.svg" alt="Contact" data-target="contact" class="button" id="btn-contact" style="left: 75.7%; top: 50%; width: 14.9vw; translate:(-50%, -50%) rotate(357deg);">
 
       <img src="assets/music-assets/record_player.svg" alt="record player" class="button" id="record_player" style="left: 64.6%; top: 83%; width: 15.6vw;">
       <img src="assets/music-assets/radio.svg" alt="radio" class="button" id="radio" style="left: 72.28%; top: 86.2%; width: 11.8vw;">
@@ -53,10 +61,10 @@
       <img src="assets/music-assets/keyboard.svg" alt="keyboard" class="button" id="keyboard" style="left: 77.6%; top: 93%; width: 19.35vw; ">
 
       <!-- ski buttons -->
-      <img src="assets/skiing-assets/writing_cl.svg" alt="Writing" class="button" id="btn-writing" style="left: 83.29%; top: 34.8%; width: 9vw;">
-      <img src="assets/skiing-assets/code_cl.svg" alt="Code/Design" class="button" id="btn-code" style="left: 86.26%; top: 39%; width: 11.2vw;">
-      <img src="assets/skiing-assets/home_cl.svg" alt="Home" class="button" id="btn-home" style="left: 90.2%; top: 30.8%; width: 10.5vw;">
-      <img src="assets/skiing-assets/music_cl.svg" alt="Music" class="button" id="btn-music" style="left: 94.5%; top: 22%; width: 10.8vw; ">
+      <img src="assets/skiing-assets/writing_cl.svg" alt="Writing" data-target="writing"class="button" id="btn-writing" style="left: 83.29%; top: 34.8%; width: 9vw;">
+      <img src="assets/skiing-assets/code_cl.svg" alt="Code/Design" data-target="code" class="button" id="btn-code" style="left: 86.26%; top: 39%; width: 11.2vw;">
+      <img src="assets/skiing-assets/home_cl.svg" alt="Home" class="button" data-target="home"id="btn-home" style="left: 90.2%; top: 30.8%; width: 10.5vw;">
+      <img src="assets/skiing-assets/music_cl.svg" alt="Music" data-target="music"class="button" id="btn-music" style="left: 94.5%; top: 22%; width: 10.8vw; ">
       
       <img src="assets/skiing-assets/linkedin.svg" alt="linkedin" class="button" id="linkedin" style="left: 93.29%; top: 70%; width: 6.5vw;">
       <img src="assets/skiing-assets/instagram.svg" alt="Code/Design" class="button" id="instagram" style="left: 94.6%; top: 70.2%; width: 6.7vw;">
@@ -64,12 +72,30 @@
       <img src="assets/skiing-assets/email.svg" alt="email" class="button" id="email_button" style="left: 98%; top: 96%; width: 6vw; ">
       <!-- home buttons -->
 
-      <img src="assets/home-assets/home_writing_button.svg" alt="Writing" class="button" id="btn-writing" style="left: 46.4%; top: 28.2%; width: 10.5vw;">
-      <img src="assets/home-assets/home_contact_button.svg" alt="Contact" class="button" id="btn-music" style="left: 52.3%; top: 34%; width: 16vw; ">
-      <img src="assets/home-assets/home_music_button.svg" alt="Music" class="button" id="home_music_button" style="left: 52.9%; top: 30%; width: 17vw; translate:(-50%, -50%) rotate(20deg); ">
-      <img src="assets/home-assets/home_code_button.svg" alt="Code/Design" class="button" id="btn-code" style="left: 49.5%; top: 29.3%; width: 25.8vw;">
+      <img src="assets/tennis-assets/tennis_code.svg" alt="Code" class="button" data-target="code" style="left: 1.8%; top: 31.5%; width: 9.5vw;">
+      <img src="assets/home-assets/home_writing_button.svg" alt="Writing" data-target="writing" class="button"  style="left: 46.4%; top: 28.2%; width: 10.5vw;">
+      <img src="assets/home-assets/home_contact_button.svg" alt="Contact" data-target="contact"class="button" id="btn-music" style="left: 52.3%; top: 34%; width: 16vw; ">
+      <img src="assets/home-assets/home_music_button.svg" alt="Music" data-target="music"class="button" id="home_music_button" style="left: 52.9%; top: 30%; width: 17vw; translate:(-50%, -50%) rotate(20deg); ">
+      <img src="assets/home-assets/home_code_button.svg" alt="Code/Design" data-target="code"class="button" id="btn-code" style="left: 49.5%; top: 29.3%; width: 25.8vw;">
     </div>
   </div>
+
+  <!-- Reusable overlay -->
+
+  <!-- Overlay -->
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <div class="overlay-backdrop"></div>
+
+    <div class="overlay-panel" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
+      <div class="overlay-content">
+        <button class="overlay-close" type="button" aria-label="Close">✕</button>
+
+        <h2 id="overlay-title">Coming soon</h2>
+        <p>I’ll fill this with images/text later.</p>
+      </div>
+    </div>
+  </div>
+
 
   
 </body>
