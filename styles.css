@@ -1,116 +1,11 @@
+/* ===== Base ===== */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   overflow: hidden;
-}
-
-/* ===== Overlay ===== */
-.overlay {
-  position: fixed;
-  inset: 0;
-  display: none;
-  z-index: 9999;
   font-family: "Bebas Neue", sans-serif;
-}
-
-.overlay.is-open { display: block; }
-
-/* Dimmed backdrop, no blur */
-.overlay-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: none;
-  z-index: 0;
-}
-
-/* Center the panel */
-.overlay-panel {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 2vh 2vw;
-  z-index: 1;
-}
-
-/* White box with Figma aspect (828×479), fully responsive */
-/* The white box */
-/* The white box */
-.overlay-content {
-  position: relative;
-
-  /* 20% bigger than the last version */
-  width: min(50vw, calc(60vh * (828 / 479)));
-  aspect-ratio: 828 / 479;
-  height: auto;
-
-  max-width: 55vw;
-  max-height: 55vh;
-
-  background: #fff;
-  color: #000;
-  border: 0.32rem solid #000;
-  border-radius: 0;
-
-  box-shadow: 0 1.25rem 3.75rem rgba(0,0,0,.25);
-  padding: 2vh;
-  text-align: left;
-  overflow: auto;
-}
-
-/* Title + text sizes */
-.overlay-content h2 {
-  margin: 0 0 1vh 0;
-  font-weight: 400;
-  font-size: clamp(1.5rem, 2.5vw, 2.4rem); /* smaller for better fit */
-}
-
-.overlay-content p {
-  margin: 0;
-  font-size: clamp(1rem, 1.8vw, 1.6rem); /* proportional to box size */
-}
-
-
-
-/* Title + text sizes — responsive, no px */
-.overlay-content h2 {
-  margin: 0 0 1.2vh 0;
-  font-weight: 400;
-  font-size: clamp(1.6rem, 4.5vw, 3rem);
-}
-
-.overlay-content p {
-  margin: 0;
-  font-size: clamp(1rem, 2.6vw, 1.8rem);
-}
-
-/* Close X (no box) */
-.overlay-close {
-  position: absolute;
-  top: 1vh;
-  right: 1vw;
-  width: 2.5rem;
-  height: 2.5rem;
-  line-height: 2.375rem;
-  text-align: center;
-
-  background: none;
-  color: #000;
-  border: none;
-  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
-  cursor: pointer;
-  z-index: 2;
-  transform-origin: center;
-}
-
-.overlay-close:focus { outline: none; }
-
-.overlay-close:hover {
-  color: #111;
-  transform: scale(1.06);
 }
 
 /* ===== Main canvas ===== */
@@ -122,11 +17,10 @@ html, body {
   scroll-behavior: smooth;
   white-space: nowrap;
 }
-
 .scroll-area {
   position: relative;
   height: 100%;
-  display: inline-block;
+  display: inline-block; /* keep wide content inline */
 }
 
 /* Only the background image fills the height */
@@ -136,7 +30,7 @@ html, body {
   display: block;
 }
 
-/* Labels (hidden text until you add content) */
+/* Section labels (centered anchors) */
 .label {
   position: absolute;
   top: 50%;
@@ -154,17 +48,19 @@ html, body {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 0.125rem; /* thin, scalable */
+  width: 0.125rem;
   background-color: rgba(255, 255, 255, 0.7);
   z-index: 1;
 }
 
-/* ===== Buttons (icons) ===== */
+/* ===== Buttons (icons) =====
+   Width is set by JS from data-wvw → % of bg width.
+   Do NOT set width here. */
 .button {
   position: absolute;
   --rot: rotate(0deg);
   transform: translate(-50%, -50%) var(--rot);
-  height: auto !important;
+  height: auto !important;   /* preserve aspect ratio */
   max-width: none !important;
   max-height: none !important;
   cursor: pointer;
@@ -175,11 +71,133 @@ html, body {
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* Hover: subtle scale + grey + shape-aware shadow (no px in offsets) */
+/* Hover: subtle scale + grey + shape-aware shadow */
 .button:hover {
   transform: translate(-50%, -50%) var(--rot) scale(1.05);
   filter:
     grayscale(60%)
     brightness(0.9)
     drop-shadow(0 0.5rem 1rem rgba(0, 0, 0, 0.15));
+}
+
+/* ===== Overlay (responsive, no blur backdrop) ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+.overlay.is-open { display: block; }
+
+.overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: none;
+  z-index: 0;
+}
+
+.overlay-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 2vh 2vw;
+  z-index: 1;
+}
+
+/* White box with 828×479 aspect; scalable */
+.overlay-content {
+  position: relative;
+
+  /* ~50vw baseline, scales with viewport height too */
+  width: min(50vw, calc(50vh * (828 / 479)));
+  aspect-ratio: 828 / 479;
+  height: auto;
+
+  max-width: 55vw;
+  max-height: 55vh;
+
+  background: #fff;
+  color: #000;
+  border: 0.32rem solid #000; /* ~5px at common DPIs */
+  border-radius: 0;
+  box-shadow: 0 1.25rem 3.75rem rgba(0,0,0,.25);
+  padding: 2vh;
+  text-align: left;
+  overflow: auto;
+}
+
+.overlay-content h2 {
+  margin: 0 0 1vh 0;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.5vw, 2.4rem);
+}
+.overlay-content p {
+  margin: 0;
+  font-size: clamp(1rem, 1.8vw, 1.6rem);
+}
+
+.overlay-close {
+  position: absolute;
+  top: 1vh;
+  right: 1vw;
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.375rem;
+  text-align: center;
+  background: none;
+  color: #000;
+  border: none;
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  cursor: pointer;
+  z-index: 2;
+  transform-origin: center;
+}
+.overlay-close:focus { outline: none; }
+.overlay-close:hover { color: #111; transform: scale(1.06); }
+
+/* ===== Edge arrows (scroll hints) ===== */
+.edge-hint {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(3rem, 6vw, 4.5rem); /* big, responsive */
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.4);     /* translucent start */
+  background: none;                    /* no box */
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease, color 0.2s ease, transform 0.2s ease;
+}
+.edge-hint.left  { left: 1rem; }
+.edge-hint.right { right: 1rem; }
+
+.edge-hint:hover {
+  color: rgba(255, 255, 255, 1);       /* opaque on hover */
+  transform: translateY(-50%) scale(1.1);
+}
+.edge-hint.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===== Optional: horizontal scrollbar styling ===== */
+.wrapper {
+  scrollbar-width: thin;              /* Firefox */
+  scrollbar-color: rgba(255,255,255,.35) transparent;
+}
+.wrapper::-webkit-scrollbar { height: 0.6rem; }
+.wrapper::-webkit-scrollbar-track { background: transparent; }
+.wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.35);
+  border-radius: 0.3rem;
+}
+
+/* Small screens tweak arrows a bit */
+@media (max-width: 600px) {
+  .edge-hint { font-size: 3rem; }
 }
