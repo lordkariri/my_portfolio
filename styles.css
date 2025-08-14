@@ -209,6 +209,67 @@ html, body {
 .exp ul li { margin: 0.4em 0; }
 
 
+
+/* Overlay content defaults (applies to injected HTML inside .overlay-content) */
+.overlay-content > *:not(.overlay-close) {
+  /* provides consistent vertical rhythm inside the overlay box */
+  margin: 0 0 1.2vh 0;
+}
+
+.overlay-content h2 {
+  font-weight: 400;
+  /* you can keep your current size; this is just to ensure consistency */
+  line-height: 1.2;
+}
+
+.overlay-content p,
+.overlay-content a {
+  line-height: 1.45;
+}
+
+.overlay-content hr {
+  border: 0;
+  border-top: 0.12rem solid rgba(0,0,0,0.15);
+  margin: 1.2vh 0;
+}
+
+
+/* Design overlay layout */
+.design .proj { margin-bottom: 2vh; }
+.design .proj-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;   /* image : text */
+  gap: 2vw;
+  align-items: start;
+}
+.design .proj-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 0.2rem solid #000;          /* matches your overlay style */
+}
+.design .proj-body p { margin: 0.6rem 0; }
+
+/* Stack on small screens */
+@media (max-width: 800px) {
+  .design .proj-row { grid-template-columns: 1fr; }
+}
+
+.guitar-video {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.guitar-video iframe {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+}
+
+
+
+
 /* ===== Edge arrows (scroll hints) ===== */
 .edge-hint {
   position: fixed;
