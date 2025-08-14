@@ -1,10 +1,13 @@
-/* ========= Sections / scrolling ========= */
-
+/* ========= Elements ========= */
 const wrapper    = document.querySelector('.wrapper');
-const scrollArea = document.querySelector('.scroll-area'); // wide content
-const labels     = document.querySelectorAll('.label');    // order: writing, code, home, music, contact
+const scrollArea = document.querySelector('.scroll-area');
+const labels     = document.querySelectorAll('.label'); // order: writing, code, home, music, contact
+const bgImg      = document.getElementById('bg-img');
 
-// Map section name -> label index (must match your HTML order)
+const hintLeft   = document.querySelector('.edge-hint.left');
+const hintRight  = document.querySelector('.edge-hint.right');
+
+/* ========= Section mapping (must match label order) ========= */
 const sectionIndex = {
   writing: 0,
   code:    1,
@@ -13,38 +16,52 @@ const sectionIndex = {
   contact: 4
 };
 
+/* ========= Helpers: section centering ========= */
 function getSectionOffsetByName(name) {
   const idx = sectionIndex[name];
   if (idx == null || !labels[idx]) return 0;
 
+  // Read the anchor’s left % directly from inline style
   const leftPercent = parseFloat(labels[idx].style.left || '0');
-  const sw = scrollArea.scrollWidth || wrapper.scrollWidth;
-  return (leftPercent / 100) * sw - (window.innerWidth / 2);
+  const totalWidth  = scrollArea.scrollWidth; // width of the long canvas
+  const targetX     = (leftPercent / 100) * totalWidth - (window.innerWidth / 2);
+
+  return Math.max(0, targetX);
 }
 
-function scrollToSectionByName(name, behavior = 'smooth') {
-  const offset = getSectionOffsetByName(name);
-  wrapper.scrollTo({ left: offset, behavior });
+function scrollToSectionByName(name) {
+  const x = getSectionOffsetByName(name);
+  wrapper.scrollTo({ left: x, behavior: 'smooth' });
 }
 
-// Back-compat if you ever call by index
-function scrollToSection(idx) {
-  const name = Object.keys(sectionIndex).find(k => sectionIndex[k] === idx);
-  if (name) scrollToSectionByName(name);
+/* ========= Buttons that scroll to sections ========= */
+function wireSectionButtons() {
+  document.querySelectorAll('.button[data-target]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target; // 'home' | 'code' | 'writing' | 'music' | 'contact'
+      if (target) scrollToSectionByName(target);
+    }, { passive: true });
+  });
+
+  // Legacy unique IDs (safe no-ops if missing)
+  [
+    { id: 'btn-code',    target: 'code'    },
+    { id: 'btn-home',    target: 'home'    },
+    { id: 'btn-music',   target: 'music'   },
+    { id: 'btn-contact', target: 'contact' },
+    { id: 'btn-writing', target: 'writing' }
+  ].forEach(({ id, target }) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', () => scrollToSectionByName(target), { passive: true });
+  });
 }
 
-/* ========= Overlay ========= */
-
+/* ========= Overlay system ========= */
 const overlayEl  = document.getElementById('overlay');
 const contentEl  = overlayEl ? overlayEl.querySelector('.overlay-content') : null;
 
-function toTitleCaseFromId(id) {
-  return String(id)
-    .replace(/[-_]/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase());
-}
-
 function getOverlayHTML(id) {
+  // Looks for <template id="tmpl-<id>">…</template>
   const tpl = document.getElementById(`tmpl-${id}`);
   return tpl ? tpl.innerHTML : '';
 }
@@ -52,7 +69,7 @@ function getOverlayHTML(id) {
 function openOverlay({ title = 'Coming Soon', html = '' } = {}) {
   if (!overlayEl || !contentEl) return;
 
-  // Build fresh content with a top-right close button
+  // Build fresh content; keep the close button at top-right
   const close = document.createElement('button');
   close.className = 'overlay-close';
   close.type = 'button';
@@ -68,9 +85,9 @@ function openOverlay({ title = 'Coming Soon', html = '' } = {}) {
   frag.appendChild(h2);
 
   if (html) {
-    const wrap = document.createElement('div');
-    wrap.innerHTML = html;
-    frag.appendChild(wrap);
+    const bodyWrap = document.createElement('div');
+    bodyWrap.innerHTML = html;
+    frag.appendChild(bodyWrap);
   } else {
     const p = document.createElement('p');
     p.textContent = 'I’ll fill this with images/text later.';
@@ -90,10 +107,14 @@ function closeOverlay() {
   overlayEl.setAttribute('aria-hidden', 'true');
 }
 
-// Close on X and click-outside
+// Close on X
 if (overlayEl) {
   overlayEl.addEventListener('click', (e) => {
-    if (e.target.closest('.overlay-close')) return closeOverlay();
+    if (e.target.closest('.overlay-close')) closeOverlay();
+  });
+
+  // Click outside the white box
+  overlayEl.addEventListener('click', (e) => {
     const inside = e.target.closest('.overlay-content');
     if (!inside) closeOverlay();
   });
@@ -106,78 +127,49 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Any .button with data-overlay opens overlay
-document.querySelectorAll('.button[data-overlay]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id    = btn.dataset.overlay;                    // e.g., "professional-experience"
-    const title = btn.dataset.title || toTitleCaseFromId(id || 'Coming Soon');
-    const html  = getOverlayHTML(id) || btn.dataset.content || '';
-    openOverlay({ title, html });
+// Buttons that open overlays
+function wireOverlayButtons() {
+  document.querySelectorAll('.button[data-overlay]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id    = btn.dataset.overlay; // e.g., "professional-experience"
+      const title = btn.dataset.title || id?.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || 'Coming Soon';
+      const html  = getOverlayHTML(id) || btn.dataset.content || '';
+      openOverlay({ title, html });
+    });
   });
-});
+}
 
-/* ========= Buttons to sections ========= */
-
-// Any .button with data-target="home|code|writing|music|contact"
-document.querySelectorAll('.button[data-target]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.dataset.target;
-    if (target) scrollToSectionByName(target);
-  });
-});
-
-// Legacy unique IDs (safe no-ops if missing)
-[
-  { id: 'btn-code',    target: 'code'    },
-  { id: 'btn-home',    target: 'home'    },
-  { id: 'btn-music',   target: 'music'   },
-  { id: 'btn-contact', target: 'contact' },
-  { id: 'btn-writing', target: 'writing' }
-].forEach(({ id, target }) => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener('click', () => scrollToSectionByName(target));
-});
-
-/* ========= Data-wvw → % of background width ========= */
-
+/* ========= Data-wvw → % of background width =========
+   Keeps button width consistent across devices:
+   - You set data-wvw="N" (what the width would be in vw on your screen)
+   - JS converts that to a percentage of the background image width
+*/
 function applyButtonWidths() {
-  const bg = document.getElementById('bg-img');
-  if (!bg) return;
+  if (!bgImg) return;
 
-  const rect = bg.getBoundingClientRect();
-  const bgW  = rect.width;          // displayed background width
-  const bgH  = rect.height;         // displayed background height (≈ 100vh)
-  const ratio = bgW / bgH;          // background aspect ratio
+  const bgW = bgImg.getBoundingClientRect().width || scrollArea.scrollWidth;
+  const vpW = window.innerWidth || document.documentElement.clientWidth;
 
-  // We keep using your existing data-wvw values,
-  // but interpret them relative to viewport HEIGHT * ratio,
-  // so sizes track the background image, not raw viewport width.
+  if (!bgW || !vpW) return;
+
   document.querySelectorAll('.button[data-wvw]').forEach(btn => {
     const vw = parseFloat(btn.dataset.wvw || '0');
     if (!vw) return;
 
-    // Convert "vw-like" number into pixels based on bg height instead of viewport width.
-    const px  = (vw / 100) * window.innerHeight * ratio;
-    const pct = (px / bgW) * 100;   // percent of background width
-
+    const px  = (vw / 100) * vpW;   // width this would be if set in vw
+    const pct = (px / bgW) * 100;   // convert to % of the background’s width
     btn.style.width = `${pct}%`;
   });
 }
 
-
-/* ========= Edge arrows ========= */
-
-const hintLeft  = document.querySelector('.edge-hint.left');
-const hintRight = document.querySelector('.edge-hint.right');
-
+/* ========= Edge arrows (scroll hints) ========= */
 function showArrows() {
-  if (hintLeft)  hintLeft.classList.remove('hidden');
-  if (hintRight) hintRight.classList.remove('hidden');
+  hintLeft  && hintLeft.classList.remove('hidden');
+  hintRight && hintRight.classList.remove('hidden');
 }
-
 function hideArrows() {
-  if (hintLeft)  hintLeft.classList.add('hidden');
-  if (hintRight) hintRight.classList.add('hidden');
+  hintLeft  && hintLeft.classList.add('hidden');
+  hintRight && hintRight.classList.add('hidden');
 }
 
 function updateEdgeHints() {
@@ -196,62 +188,51 @@ function updateEdgeHints() {
   hintRight.classList.toggle('hidden', x >= max - 2);
 }
 
-function nudge(amount = window.innerWidth * 0.2) {
+function nudge(amount) {
   wrapper.scrollBy({ left: amount, behavior: 'smooth' });
   setTimeout(updateEdgeHints, 250);
 }
 
-// Arrow clicks (guard for nulls)
-if (hintLeft)  hintLeft.addEventListener('click',  () => nudge(-window.innerWidth * 0.2));
-if (hintRight) hintRight.addEventListener('click', () => nudge( window.innerWidth * 0.2));
+// Arrow click amount: 20% of viewport width (gentle)
+const NUDGE = () => Math.round(window.innerWidth * 0.2);
 
-// Update arrows on scroll/resize
+hintLeft  && hintLeft.addEventListener('click',  () => nudge(-NUDGE()));
+hintRight && hintRight.addEventListener('click', () => nudge( NUDGE()));
+
+// Keep hints in sync
 wrapper.addEventListener('scroll', updateEdgeHints, { passive: true });
-
-let resizeTO;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTO);
-  resizeTO = setTimeout(() => {
-    applyButtonWidths();
-    updateEdgeHints();
-  }, 120);
-});
-
-/* ========= Initial layout ========= */
-
-// After everything loaded, compute widths, center "home", and show arrows
-window.addEventListener('load', () => {
-  applyButtonWidths();
-
-  // Try to center 'home'; if labels are missing, center the canvas
-  if (labels.length && sectionIndex.home != null) {
-    // instant jump so users start centered
-    scrollToSectionByName('home', 'instant');
-  } else {
-    const mid = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
-    wrapper.scrollTo({ left: mid, behavior: 'instant' });
-  }
-
-  showArrows();
-  requestAnimationFrame(updateEdgeHints);
-});
-window.addEventListener('load', () => {
-  applyButtonWidths();
-  requestAnimationFrame(() => {
-    updateEdgeHints();
-    // Center home without animation on very first paint
-    const mid = Math.max(0, (scrollArea.scrollWidth - window.innerWidth) / 2);
-    wrapper.scrollTo({ left: mid, behavior: 'auto' });
-    // Or: scrollToSectionByName('home');  // if you prefer your anchor logic
-  });
-});
-
 window.addEventListener('resize', () => {
   applyButtonWidths();
   updateEdgeHints();
 });
 
+/* ========= Initial layout ========= */
 
-// Also ensure arrows start visible before any scroll
-if (hintLeft)  hintLeft.classList.remove('hidden');
-if (hintRight) hintRight.classList.remove('hidden');
+// Wire interactions immediately
+wireSectionButtons();
+wireOverlayButtons();
+
+// Apply widths as soon as DOM is ready (in case image is cached)
+applyButtonWidths();
+
+// Center “home” early (some browsers draw before image fires "load")
+scrollToSectionByName('home');
+showArrows();          // ensure visible on first paint
+updateEdgeHints();
+
+// When the background image finishes sizing, re-apply widths & recenter
+function onImageReady() {
+  applyButtonWidths();
+  // Recenter home after layout stabilizes (important on other devices)
+  requestAnimationFrame(() => {
+    scrollToSectionByName('home');
+    updateEdgeHints();
+  });
+}
+
+// If already loaded, run immediately; else wait for load
+if (bgImg && (bgImg.complete || bgImg.naturalWidth)) {
+  onImageReady();
+} else if (bgImg) {
+  bgImg.addEventListener('load', onImageReady, { once: true });
+}
