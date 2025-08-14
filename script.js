@@ -108,11 +108,13 @@ window.addEventListener('keydown', (e) => {
 // Any .button with data-overlay opens overlay
 document.querySelectorAll('.button[data-overlay]').forEach(btn => {
   btn.addEventListener('click', () => {
-    const id = btn.dataset.overlay;
-    const title = toTitleCaseFromId(id || 'Coming Soon');
-    openOverlay({ title });
+    const id    = btn.dataset.overlay;                 // e.g., "professional-experience"
+    const title = btn.dataset.title || toTitleCaseFromId(id);
+    const html  = getOverlayHTML(id) || btn.dataset.content || '';
+    openOverlay({ title, html });
   });
 });
+
 
 /* ========= Buttons to sections ========= */
 
@@ -449,3 +451,9 @@ window.addEventListener('load', () => {
 // Force arrows visible on load
 if (hintLeft)  hintLeft.classList.remove('hidden');
 if (hintRight) hintRight.classList.remove('hidden');
+
+function getOverlayHTML(id) {
+  const tpl = document.getElementById(`tmpl-${id}`);
+  return tpl ? tpl.innerHTML : '';
+}
+
